@@ -11,27 +11,69 @@ import UIKit
 class ViewController: UIViewController {
     
     var timer = Timer()
-
-    @IBAction func cameraClicked(_ sender: Any) {
-        
-        print("camera was clicked")
+    
+    var time = 210
+    
+    var increment = 10
+    
+    @IBOutlet weak var TimeRemainingLabel: UILabel!
+    
+    @IBAction func PauseButtonClicked(_ sender: Any) {
         
         timer.invalidate()
+        
     }
     
-    func processTimer() {
-        print("another second has passed")
+    @IBAction func playButtonClicked(_ sender: Any) {
+        
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(ViewController.countDown), userInfo: nil, repeats: true)
+    }
+    
+    @IBAction func addTenSeconds(_ sender: Any) {
+        
+        time += increment
+        
+        TimeRemainingLabel.text = String(time)
+    }
+    
+    @IBAction func minusTenSeconds(_ sender: Any) {
+        
+        time -= increment
+        
+        if time < increment {
+            //cannot get a negative value so just leave it as it is
+        } else {
+           time -= increment
+            
+           TimeRemainingLabel.text = String(time)
+        }
+       
+        
+        
+    }
+    @IBAction func resetTimer(_ sender: Any) {
+        
+        TimeRemainingLabel.text = String(time)
+        
+    }
+    
+    func countDown() {
+        
+        let timeRemaining = TimeRemainingLabel.text
+        
+        let timeRemainingInteger = Int(timeRemaining!)! - 1
+        
+        TimeRemainingLabel.text = String(timeRemainingInteger)
+        
+        if timeRemainingInteger == 0 {
+            timer.invalidate()
+            //play a cool ringtonw
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.processTimer), userInfo: nil, repeats: true)
-        
-        
-        
-        
     }
 
     override func didReceiveMemoryWarning() {
